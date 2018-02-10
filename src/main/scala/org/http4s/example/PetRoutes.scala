@@ -4,7 +4,8 @@ import cats.Applicative
 import cats.effect.Effect
 import org.http4s.rho.{PathBuilder, RhoService}
 import org.http4s.rho.swagger.SwaggerSyntax
-import org.http4s.Uri
+import org.http4s.{EntityDecoder, Uri}
+
 import scala.concurrent.ExecutionContext
 import cats.syntax.functor._
 import cats.syntax.flatMap._
@@ -53,6 +54,12 @@ object PetRoutes {
       "This gets a simple counter for the number of times this route has been requested" **
         GET / "counter" |>> {
         counter.modify(_ + 1).map(_.now).flatMap(i => Ok(ResponseMessage(s"The number is $i")))
+      }
+
+      "Consume A Json Message" **
+      POST / "echo" ^ EntityDecoder[F, ResponseMessage] |>> { rm: ResponseMessage =>
+        Ok(rm)
+
       }
     }
 
