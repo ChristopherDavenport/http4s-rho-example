@@ -46,19 +46,19 @@ object PetRoutes {
       val hello : PathBuilder[F, HNil] = GET / "hello"
 
       "Simple hello world route" **
-        hello |>> Ok(ResponseMessage("Hello world!").asJson)
+        hello |>> Ok(ResponseMessage("Hello world!"))
 
       "Returns Hellow Based on Request" **
-        hello / pathVar[String] |>> { name: String => Ok(ResponseMessage(s"Hello, $name").asJson)}
+        hello / pathVar[String] |>> { name: String => Ok(ResponseMessage(s"Hello, $name"))}
 
       val pet : PathBuilder[F, HNil] = GET / "pet"
 
       "A variant of the hello route that takes an Int param" **
-        pet / pathVar[Int] |>> { i: Int => Ok(s"You returned $i") }
+        pet / pathVar[Int] |>> { i: Int => Ok(ResponseMessage(s"You returned $i")) }
 
       "This gets a simple counter for the number of times this route has been requested" **
         GET / "counter" |>> {
-        counter.modify(_ + 1).map(_.now).flatMap(i => Ok(s"The number is $i"))
+        counter.modify(_ + 1).map(_.now).flatMap(i => Ok(ResponseMessage(s"The number is $i")))
       }
     }
 
