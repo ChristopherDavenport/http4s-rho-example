@@ -19,9 +19,11 @@ object HelloWorldServer extends StreamApp[IO] with Http4sDsl[IO] {
     service <- Stream.eval(PetRoutes.petRoute[IO])
     middleware = createRhoMiddleware()
 
+    staticService = StaticRoutes.service[IO]
+
     out <- BlazeBuilder[IO]
       .bindHttp(8080, "0.0.0.0")
-      .mountService(service.toService(middleware), "/")
+      .mountService(staticService <+> service.toService(middleware), "/")
       .serve
   } yield out
 
