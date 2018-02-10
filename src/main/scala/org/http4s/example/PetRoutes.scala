@@ -5,19 +5,13 @@ import cats.effect.Effect
 import org.http4s.rho.{PathBuilder, RhoService}
 import org.http4s.rho.swagger.SwaggerSyntax
 import org.http4s.Uri
-
 import scala.concurrent.ExecutionContext
-import cats.syntax.show._
 import cats.syntax.functor._
 import cats.syntax.flatMap._
-import cats.syntax.monad._
 import org.http4s.example.Models.ResponseMessage
 import shapeless._
 
-import io.circe.syntax._
-import org.http4s.circe._
-
-//import cats.implicits._
+//import cats.implicits._ // VERY BROKEN DO NOT IMPORT AT THE MOMENT
 
 object PetRoutes {
 

@@ -8,6 +8,7 @@ lazy val root = (project in file("."))
     name := "http4s-rho-example",
     version := "0.0.1-SNAPSHOT",
     scalaVersion := "2.12.4",
+    addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.6"),
     libraryDependencies ++= Seq(
       "org.http4s"      %% "http4s-blaze-server"  % Http4sVersion,
       "org.http4s"      %% "http4s-circe"         % Http4sVersion,
