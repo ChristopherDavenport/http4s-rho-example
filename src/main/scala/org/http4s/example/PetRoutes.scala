@@ -3,7 +3,7 @@ package org.http4s.example
 import cats.Applicative
 import cats.effect.Effect
 import org.http4s.rho.{PathBuilder, RhoService}
-import org.http4s.rho.swagger.{SwaggerSyntax}
+import org.http4s.rho.swagger.SwaggerSyntax
 import org.http4s.Uri
 
 import scala.concurrent.ExecutionContext
@@ -11,7 +11,11 @@ import cats.syntax.show._
 import cats.syntax.functor._
 import cats.syntax.flatMap._
 import cats.syntax.monad._
+import org.http4s.example.Models.ResponseMessage
 import shapeless._
+
+import io.circe.syntax._
+import org.http4s.circe._
 
 //import cats.implicits._
 
@@ -42,7 +46,10 @@ object PetRoutes {
       val hello : PathBuilder[F, HNil] = GET / "hello"
 
       "Simple hello world route" **
-        hello |>> Ok("Hello world!")
+        hello |>> Ok(ResponseMessage("Hello world!").asJson)
+
+      "Returns Hellow Based on Request" **
+        hello / pathVar[String] |>> { name: String => Ok(ResponseMessage(s"Hello, $name").asJson)}
 
       val pet : PathBuilder[F, HNil] = GET / "pet"
 

@@ -4,6 +4,8 @@ import cats.effect.IO
 import org.http4s._
 import org.http4s.implicits._
 import org.specs2.matcher.MatchResult
+import scala.concurrent.ExecutionContext.Implicits.global
+import org.http4s.rho.swagger.syntax.io._
 
 class HelloWorldSpec extends org.specs2.mutable.Specification {
   "HelloWorld" >> {
@@ -14,10 +16,11 @@ class HelloWorldSpec extends org.specs2.mutable.Specification {
       uriReturnsHelloWorld()
     }
   }
+  val middleware = createRhoMiddleware()
 
   private[this] val retHelloWorld: Response[IO] = {
     val getHW = Request[IO](Method.GET, Uri.uri("/hello/world"))
-    HelloWorldServer.service.orNotFound(getHW).unsafeRunSync()
+    PetRoutes.petRoute[IO].flatMap(_.toService(middleware).orNotFound(getHW)).unsafeRunSync()
   }
 
   private[this] def uriReturns200(): MatchResult[Status] =
