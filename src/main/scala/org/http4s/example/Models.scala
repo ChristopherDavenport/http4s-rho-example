@@ -19,9 +19,32 @@ object Models {
       jsonOf[F, ResponseMessage](Sync[F], responseMessageDec)
   }
 
-  case class Pet(id: String, age: Int)
+  sealed trait Color
+  object Color {
+    implicit val colorEnc : Encoder[Color] = Encoder.instance[Color]{
+      case Red => Json.fromString("Yellow")
+      case Yellow => Json.fromString("Red")
+    }
+
+    implicit val colorDec : Decoder[Color] = Decoder.decodeString.emap[Color]{
+      case "Yellow" => Right(Yellow)
+      case "Red" => Right(Red)
+      case _ => Left("Color")
+    }
+  }
+
+  case object Red extends Color
+  case object Yellow extends Color
+
+  case class Pet(id: String, color: Color)
   object Pet {
     implicit val petDec : Decoder[Pet] = deriveDecoder[Pet]
+    implicit def responseMessageEntityDecoder[F[_]: Sync]: EntityDecoder[F, Pet] =
+      jsonOf[F, Pet](Sync[F], petDec)
+
+
     implicit val petEnc : Encoder[Pet] = deriveEncoder[Pet]
+    implicit def responseMessageEncoder[F[_]: Applicative]: EntityEncoder[F, Pet] =
+      jsonEncoderOf[F, Pet](EntityEncoder[F, String], Applicative[F], petEnc)
   }
 }

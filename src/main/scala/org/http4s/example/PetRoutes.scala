@@ -51,6 +51,9 @@ object PetRoutes {
       "A variant of the hello route that takes an Int param" **
         pet / pathVar[Int] |>> { i: Int => Ok(ResponseMessage(s"You returned $i")) }
 
+      "Default Pet" **
+        pet |>> { Ok(Models.Pet("name", Models.Red)) }
+
       "This gets a simple counter for the number of times this route has been requested" **
         GET / "counter" |>> {
         counter.modify(_ + 1).map(_.now).flatMap(i => Ok(ResponseMessage(s"The number is $i")))
