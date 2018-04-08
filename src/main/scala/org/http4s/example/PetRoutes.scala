@@ -7,12 +7,10 @@ import org.http4s.rho.swagger.SwaggerSyntax
 import org.http4s.{EntityDecoder, Uri}
 
 import scala.concurrent.ExecutionContext
-import cats.syntax.functor._
-import cats.syntax.flatMap._
 import org.http4s.example.Models.ResponseMessage
 import shapeless._
 
-//import cats.implicits._ // VERY BROKEN DO NOT IMPORT AT THE MOMENT
+import cats.implicits._
 
 object PetRoutes {
 
